@@ -29,12 +29,16 @@ class _PostsListState extends State<PostsList> {
             if (state.posts.isEmpty) {
               return const Center(child: Text('no posts'));
             }
-            return ListView.builder(
+            return ListView.separated(
               itemBuilder: (BuildContext context, int index) {
                 return index >= state.posts.length
                     ? const BottomLoader()
                     : PostListItem(post: state.posts[index]);
               },
+              separatorBuilder: (_, __) => const Divider(
+                height: 0,
+                thickness: 0.5,
+              ),
               itemCount: state.hasReachedMax
                   ? state.posts.length
                   : state.posts.length + 1,
