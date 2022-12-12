@@ -1,33 +1,20 @@
-import 'package:flutter/material.dart';
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:bloc/bloc.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_login_app/firebase_options.dart';
+import 'package:flutter/widgets.dart';
+import 'package:firebase_login_app/app/app.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = AppBlocObserver();
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(),
-    );
-  }
-}
+  final authenticationRepository = AuthenticationRepository();
+  await authenticationRepository.user.first;
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home Page')),
-      body: const Center(child: Text('Home Page')),
-    );
-  }
+  runApp(App(authenticationRepository: authenticationRepository));
 }
