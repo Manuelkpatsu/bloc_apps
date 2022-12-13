@@ -1,33 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:common_github_search/common_github_search.dart';
+import 'package:github_search_app/search_form.dart';
 
 void main() {
-  runApp(const MyApp());
+  final GithubRepository githubRepository = GithubRepository(
+    GithubCache(),
+    GithubClient(),
+  );
+
+  runApp(App(githubRepository: githubRepository));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({Key? key, required this.githubRepository}) : super(key: key);
+
+  final GithubRepository githubRepository;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      title: 'Github Search',
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Github Search')),
+        body: BlocProvider(
+          create: (_) => GithubSearchBloc(githubRepository: githubRepository),
+          child: const SearchForm(),
+        ),
       ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home Page')),
-      body: const Center(child: Text('Home Page')),
     );
   }
 }
