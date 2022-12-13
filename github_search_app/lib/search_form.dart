@@ -73,14 +73,18 @@ class _SearchBody extends StatelessWidget {
     return BlocBuilder<GithubSearchBloc, GithubSearchState>(
       builder: (context, state) {
         if (state is SearchStateLoading) {
-          return const CircularProgressIndicator();
+          return const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
         if (state is SearchStateError) {
-          return Text(state.error);
+          return Expanded(child: Center(child: Text(state.error)));
         }
         if (state is SearchStateSuccess) {
           return state.items.isEmpty
-              ? const Text('No Results')
+              ? const Expanded(child: Center(child: Text('No Results')))
               : Expanded(child: _SearchResults(items: state.items));
         }
         return const Text('Please enter a term to begin');
